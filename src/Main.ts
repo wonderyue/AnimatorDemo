@@ -130,18 +130,13 @@ class Main extends egret.DisplayObjectContainer {
         factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
         factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
 
-        var armature:dragonBones.Armature = factory.buildArmature("warrior");
+        var armature:dragonBones.Armature = factory.buildArmature("Zombie_gargantuar");
         var armatureDisplay =  armature.getDisplay();
         dragonBones.WorldClock.clock.add(armature);
         this.gameLayer.addChild(armatureDisplay);
-        armatureDisplay.x = 200;
-        armatureDisplay.y = 450;
-        armatureDisplay.scaleX = armatureDisplay.scaleY = 0.5;
-        armature.animation.gotoAndPlay("ready");
+        armatureDisplay.x = egret.MainContext.instance.stage.stageWidth / 2;
+        armatureDisplay.y = egret.MainContext.instance.stage.stageHeight / 2;
 
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
 
         var fsm:animator.Animator = new animator.Animator(armature,"fsm_json");
         var controlBtn:ControlButton = new ControlButton(fsm);

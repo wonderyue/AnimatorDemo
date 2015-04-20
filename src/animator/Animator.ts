@@ -4,7 +4,6 @@
  */
 module animator{
     export class Animator{
-        private _exitTime:number = 0.6; //���ζ����Ŀ��л�ʱ�䣬������ʱ����һ������ʱ��δ�ﵽ��ʱ��0.6ʱ�޷����ӵڶ���
         private _fsm:Fsm;
         private _armature:dragonBones.Armature;
         private _animationState:dragonBones.AnimationState;
@@ -15,20 +14,21 @@ module animator{
             var obj:Object = RES.getRes(fsmFileName);
             this._fsm = Fsm.create(obj["state"]);
             this._armature.userData = this;
-            this._armature.addEventListener(dragonBones.AnimationEvent.COMPLETE, this.onComplete);
             this._animationState = this._armature.animation.gotoAndPlay(this._fsm.curState.animation);
+            this._armature.animation._advanceTime(0);
+            this._armature.addEventListener(dragonBones.AnimationEvent.COMPLETE, this.onComplete);
+            dragonBones.WorldClock.clock.add(this._armature);
+            egret.Ticker.getInstance().register(function (advancedTime) {
+                dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
+            }, this);
         }
 
         public setParam(id:string, value:any):string{
             var stateId = this._fsm.setParam(id,value);
             if(stateId){
-                if((this._animationState.playTimes > 0) && (this._animationState.currentTime / this._animationState.totalTime < this._exitTime)){
-
-                } else {
-                    this._fsm.curStateId = stateId;
-                    this._animationState = this._armature.animation.gotoAndPlay(this._fsm.curState.animation);
-                    return stateId;
-                }
+                this._fsm.curStateId = stateId;
+                this._animationState = this._armature.animation.gotoAndPlay(this._fsm.curState.animation);
+                return stateId;
             }
             return null;
         }

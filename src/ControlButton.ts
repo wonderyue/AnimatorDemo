@@ -29,9 +29,9 @@ class ControlButton extends egret.gui.SkinnableComponent{
         }else if(e.target == this.runBtn)
         {
             if(e.type == egret.TouchEvent.TOUCH_BEGIN){
-                this._fsm.setParam("run",true);
+                this._fsm.setParam("walk",true);
             }else if(e.type == egret.TouchEvent.TOUCH_END){
-                this._fsm.setParam("run",false);
+                this._fsm.setParam("walk",false);
             }
         }else if(e.target == this.hitBtn)
         {
